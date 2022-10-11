@@ -11,7 +11,6 @@ const attachCookiesToRes = (
   res: Response,
   user: { name: string; userId: object; role: string }
 ) => {
-  console.log(user);
   const token = createJWT(user);
 
   const oneDay = 1000 * 60 * 60 * 24;

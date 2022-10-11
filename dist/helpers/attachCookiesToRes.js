@@ -11,7 +11,6 @@ const verifyJWT = ({ token }) => {
 };
 exports.verifyJWT = verifyJWT;
 const attachCookiesToRes = (res, user) => {
-    console.log(user);
     const token = (0, createJWT_1.default)(user);
     const oneDay = 1000 * 60 * 60 * 24;
     res.cookie("token", token, {

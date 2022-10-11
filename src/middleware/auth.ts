@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { UnauthenticatedError } from "../errors";
+import { UnauthenticatedError, UnauthorizedError } from "../errors";
 import { verifyJWT } from "../helpers";
 
 export interface AuthUserRequest extends Request {
@@ -11,7 +11,16 @@ const authenticateUser = (
   res: Response,
   next: NextFunction
 ) => {
-  const { token } = req.signedCookies as { token: string };
+  let token;
+  // check header
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer")) {
+    token = authHeader.split(" ")[1];
+  }
+  // check cookies
+  else if (req.signedCookies.token) {
+    token = req.signedCookies.token;
+  }
 
   if (!token) {
     throw new UnauthenticatedError("Authentication Invalid");
@@ -31,4 +40,13 @@ const authenticateUser = (
   }
 };
 
-export { authenticateUser };
+const authorizeRoles = (...roles: string[]) => {
+  return (req: AuthUserRequest, res: Response, next: NextFunction) => {
+    if (!roles.includes(req.user!.role)) {
+      throw new UnauthorizedError("User not allowed to access this route");
+    }
+    next();
+  };
+};
+
+export { authenticateUser, authorizeRoles };

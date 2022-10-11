@@ -1,10 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateUser = void 0;
+exports.authorizeRoles = exports.authenticateUser = void 0;
 const errors_1 = require("../errors");
 const helpers_1 = require("../helpers");
 const authenticateUser = (req, res, next) => {
-    const { token } = req.signedCookies;
+    let token;
+    // check header
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer")) {
+        token = authHeader.split(" ")[1];
+    }
+    // check cookies
+    else if (req.signedCookies.token) {
+        token = req.signedCookies.token;
+    }
     if (!token) {
         throw new errors_1.UnauthenticatedError("Authentication Invalid");
     }
@@ -18,3 +27,12 @@ const authenticateUser = (req, res, next) => {
     }
 };
 exports.authenticateUser = authenticateUser;
+const authorizeRoles = (...roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            throw new errors_1.UnauthorizedError("User not allowed to access this route");
+        }
+        next();
+    };
+};
+exports.authorizeRoles = authorizeRoles;
