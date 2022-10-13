@@ -3,7 +3,7 @@ import { UnauthenticatedError, UnauthorizedError } from "../errors";
 import { verifyJWT } from "../helpers";
 
 export interface AuthUserRequest extends Request {
-  user?: { name: string; userId: object; role: string };
+  user?: { name: string; userId: string; role: string };
 }
 
 const authenticateUser = (
@@ -29,7 +29,7 @@ const authenticateUser = (
   try {
     const { name, userId, role } = verifyJWT({ token }) as {
       name: string;
-      userId: object;
+      userId: string;
       role: string;
     };
 

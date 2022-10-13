@@ -1,29 +1,93 @@
 import { RequestHandler } from "express";
 import { AuthUserRequest } from "../middleware/auth";
 import { StatusCodes } from "http-status-codes";
+import Product from "../models/Product";
+import { BadRequestError, NotFoundError } from "../errors";
+import path from "path";
 
-const createProduct: RequestHandler = (req: AuthUserRequest, res) => {
-  res.status(200).json({ msg: "create product success", user: req.user});
+const createProduct: RequestHandler = async (req: AuthUserRequest, res) => {
+  req.body.user = req.user?.userId;
+  const product = await Product.create({ ...req.body });
+  res
+    .status(StatusCodes.CREATED)
+    .json({ msg: "create product success", product });
 };
 
-const getAllProducts: RequestHandler = (req, res) => {
-  res.status(200).json({ msg: "get all products success" });
+const getAllProducts: RequestHandler = async (req, res) => {
+  const products = await Product.find({});
+
+  res.status(StatusCodes.OK).json({ products, count: products.length });
 };
 
-const getSingleProduct: RequestHandler = (req, res) => {
-  res.status(200).json({ msg: "get single product success" });
+const getSingleProduct: RequestHandler<{ productId: string }> = async (
+  req,
+  res
+) => {
+  const { productId } = req.params;
+
+  const product = await Product.findOne({ _id: productId });
+  if (!product) {
+    throw new NotFoundError(`product with id ${productId} not found`);
+  }
+
+  res.status(StatusCodes.OK).json({ product });
 };
 
-const updateProduct: RequestHandler = (req, res) => {
-  res.status(200).json({ msg: "update product success" });
+const updateProduct: RequestHandler<{ productId: string }> = async (
+  req,
+  res
+) => {
+  const { productId } = req.params;
+
+  const product = await Product.findOneAndUpdate({ _id: productId }, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!product) {
+    throw new NotFoundError(`User with id:${productId} not registered`);
+  }
+
+  res.status(StatusCodes.OK).json({ product });
 };
 
-const deleteProduct: RequestHandler = (req, res) => {
-  res.status(200).json({ msg: "delete product success" });
+const deleteProduct: RequestHandler = async (req, res) => {
+  const { productId } = req.params;
+
+  const product = await Product.findOne({ _id: productId });
+  if (!product) {
+    throw new NotFoundError(`product with id ${productId} not found`);
+  }
+
+  await product.remove();
+  res.status(StatusCodes.OK).json({ msg: "Product succesfully deleted" });
 };
 
-const uploadImage: RequestHandler = (req, res) => {
-  res.status(200).json({ msg: "upload success" });
+const uploadImage: RequestHandler = async (req, res) => {
+  if (!req.files) {
+    throw new BadRequestError("No file was uploaded");
+  }
+
+  //the name attribute of the input[type="file"] would be productImage
+  //using any type cos the UploadedFile Type doesn't have the object properties
+  const productImage: any = req.files.productImage;
+
+  if (!productImage.mimetype.startsWith("image")) {
+    throw new BadRequestError("Please upload a valid image");
+  }
+
+  const maxSize = 1024 * 1024// 1MB max
+  if (productImage.size > maxSize) {
+    throw new BadRequestError("File too large");
+  }
+
+  const imagePath = path.join(
+    __dirname,
+    "../public/uploads/" + `${productImage.name}`
+  );
+  await productImage.mv(imagePath);
+
+  res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
 };
 
 export {

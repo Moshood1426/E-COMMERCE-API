@@ -21,7 +21,7 @@ router
   .post([authenticateUser, authorizeRoles("admin")], uploadImage);
 
 router
-  .route("/:id")
+  .route("/:productId")
   .get(getSingleProduct)
   .patch([authenticateUser, authorizeRoles("admin")], updateProduct)
   .delete([authenticateUser, authorizeRoles("admin")], deleteProduct);

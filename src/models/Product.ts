@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Review from "./Review";
 
 const ProductSchema = new mongoose.Schema({
   name: {
@@ -68,6 +69,10 @@ const ProductSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+});
+
+ProductSchema.pre("remove", async function () {
+  await Review.deleteMany({ product: this._id });
 });
 
 export default mongoose.model("Product", ProductSchema);

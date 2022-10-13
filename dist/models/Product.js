@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+const Review_1 = __importDefault(require("./Review"));
 const ProductSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
@@ -72,5 +73,8 @@ const ProductSchema = new mongoose_1.default.Schema({
         ref: "User",
         required: true,
     },
+});
+ProductSchema.pre("remove", async function () {
+    await Review_1.default.deleteMany({ product: this._id });
 });
 exports.default = mongoose_1.default.model("Product", ProductSchema);
