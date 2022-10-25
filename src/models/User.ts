@@ -7,11 +7,6 @@ export interface UserSchemaInterface {
   email: string;
   password: string;
   role: string;
-  verificationToken: string;
-  isVerified: boolean;
-  verified: Date;
-  passwordToken: string;
-  passwordTokenExpirationDate: Date;
   comparePassword?: (password: string) => Promise<boolean>;
 }
 
@@ -41,7 +36,7 @@ const UserSchema = new mongoose.Schema<UserSchemaInterface>({
     type: String,
     enum: ["admin", "user"],
     default: "user",
-  }
+  },
 });
 
 UserSchema.pre("save", async function () {
