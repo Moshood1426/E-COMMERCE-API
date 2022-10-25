@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteReview = exports.updateReview = exports.getSingleReview = exports.getAllReviews = exports.createReview = void 0;
+exports.getSingleProductReviews = exports.deleteReview = exports.updateReview = exports.getSingleReview = exports.getAllReviews = exports.createReview = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const Product_1 = __importDefault(require("../models/Product"));
 const errors_1 = require("../errors");
@@ -28,13 +28,17 @@ const createReview = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ review });
 };
 exports.createReview = createReview;
-const getAllReviews = (req, res) => {
-    res.status(http_status_codes_1.StatusCodes.OK).json({ msg: "get all reviews" });
+const getAllReviews = async (req, res) => {
+    const reviews = await Review_1.default.find({}).populate({
+        path: "product",
+        select: "name company price",
+    });
+    res.status(http_status_codes_1.StatusCodes.OK).json({ reviews, count: reviews.length });
 };
 exports.getAllReviews = getAllReviews;
 const getSingleReview = async (req, res) => {
-    const { id } = req.params;
-    const review = await Review_1.default.findOne({ _id: id });
+    const { id: reviewId } = req.params;
+    const review = await Review_1.default.findOne({ _id: reviewId });
     if (!review) {
         throw new errors_1.NotFoundError("No product with id provided");
     }
@@ -67,3 +71,10 @@ const deleteReview = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ msg: "Review succesSfully deleted" });
 };
 exports.deleteReview = deleteReview;
+//to get single product reviews as an alternative to using virtuals
+const getSingleProductReviews = async (req, res) => {
+    const { productId } = req.params;
+    const reviews = await Review_1.default.find({ product: productId });
+    res.status(http_status_codes_1.StatusCodes.OK).json({ reviews, count: reviews.length });
+};
+exports.getSingleProductReviews = getSingleProductReviews;

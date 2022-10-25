@@ -47,7 +47,7 @@ const login: RequestHandler = async (req, res) => {
   }
 
   const tokenUser = createTokenUser(user);
-
+  
   attachCookiesToRes(res, tokenUser);
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };

@@ -26,13 +26,18 @@ const createReview: RequestHandler = async (req: AuthUserRequest, res) => {
   res.status(StatusCodes.OK).json({ review });
 };
 
-const getAllReviews: RequestHandler = (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "get all reviews" });
+const getAllReviews: RequestHandler = async (req, res) => {
+  const reviews = await Review.find({}).populate({
+    path: "product",
+    select: "name company price",
+  });
+
+  res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
 
 const getSingleReview: RequestHandler<{ id: object }> = async (req, res) => {
-  const { id } = req.params;
-  const review = await Review.findOne({ _id: id });
+  const { id: reviewId } = req.params;
+  const review = await Review.findOne({ _id: reviewId });
   if (!review) {
     throw new NotFoundError("No product with id provided");
   }
@@ -77,10 +82,21 @@ const deleteReview: RequestHandler<{ id: string }> = async (
   res.status(StatusCodes.OK).json({ msg: "Review succesSfully deleted" });
 };
 
+//to get single product reviews as an alternative to using virtuals
+const getSingleProductReviews: RequestHandler<{ productId: string }> = async (
+  req,
+  res
+) => {
+  const { productId } = req.params;
+  const reviews = await Review.find({ product: productId });
+  res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
+};
+
 export {
   createReview,
   getAllReviews,
   getSingleReview,
   updateReview,
   deleteReview,
+  getSingleProductReviews,
 };

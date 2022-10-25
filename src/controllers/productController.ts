@@ -25,7 +25,7 @@ const getSingleProduct: RequestHandler<{ productId: string }> = async (
 ) => {
   const { productId } = req.params;
 
-  const product = await Product.findOne({ _id: productId });
+  const product = await Product.findOne({ _id: productId }).populate('reviews')
   if (!product) {
     throw new NotFoundError(`product with id ${productId} not found`);
   }

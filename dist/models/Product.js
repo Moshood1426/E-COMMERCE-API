@@ -73,6 +73,12 @@ const ProductSchema = new mongoose_1.default.Schema({
         ref: "User",
         required: true,
     },
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
+ProductSchema.virtual('reviews', {
+    ref: 'Review',
+    localField: '_id',
+    foreignField: 'product',
+    justOne: false
 });
 ProductSchema.pre("remove", async function () {
     await Review_1.default.deleteMany({ product: this._id });

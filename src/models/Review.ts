@@ -20,16 +20,29 @@ const ReviewSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       required: true,
     },
     product: {
       type: mongoose.Types.ObjectId,
-      ref: "products",
+      ref: "Product",
       required: true,
     },
   },
   { timestamps: true }
 );
+
+
+ReviewSchema.statics.calculateAverageRatings = async function(productId) {
+  //set up aggregate pipeline
+}
+
+ReviewSchema.post('save', async function () {
+  //set up calculate average ratings
+})
+
+ReviewSchema.post('remove', async function () {
+  //set up calculate average ratings
+})
 
 export default mongoose.model("Review", ReviewSchema);

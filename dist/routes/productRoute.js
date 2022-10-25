@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const auth_1 = require("../middleware/auth");
 const productController_1 = require("../controllers/productController");
+const reviewController_1 = require("../controllers/reviewController");
 const router = express_1.default.Router();
 router
     .route("/")
@@ -19,4 +20,5 @@ router
     .get(productController_1.getSingleProduct)
     .patch([auth_1.authenticateUser, (0, auth_1.authorizeRoles)("admin")], productController_1.updateProduct)
     .delete([auth_1.authenticateUser, (0, auth_1.authorizeRoles)("admin")], productController_1.deleteProduct);
+router.route('/:productId/reviews').get(reviewController_1.getSingleProductReviews);
 exports.default = router;
