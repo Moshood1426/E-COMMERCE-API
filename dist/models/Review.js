@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+const Product_1 = __importDefault(require("./Product"));
 const ReviewSchema = new mongoose_1.default.Schema({
     rating: {
         type: Number,
@@ -33,12 +34,31 @@ const ReviewSchema = new mongoose_1.default.Schema({
     },
 }, { timestamps: true });
 ReviewSchema.statics.calculateAverageRatings = async function (productId) {
-    //set up aggregate pipeline
+    var _a, _b;
+    const result = await this.aggregate([
+        { $match: { product: productId } },
+        {
+            $group: {
+                _id: null,
+                averageRating: { $avg: '$rating' },
+                numOfReviews: { $sum: 1 },
+            },
+        },
+    ]);
+    try {
+        await Product_1.default.findOneAndUpdate({ _id: productId }, {
+            averageRating: Math.ceil(((_a = result[0]) === null || _a === void 0 ? void 0 : _a.averageRating) || 0),
+            numOfReviews: ((_b = result[0]) === null || _b === void 0 ? void 0 : _b.numOfReviews) || 0,
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
 };
 ReviewSchema.post('save', async function () {
-    //set up calculate average ratings
+    await this.constructor.calculateAverageRating(this.product);
 });
 ReviewSchema.post('remove', async function () {
-    //set up calculate average ratings
+    await this.constructor.calculateAverageRating(this.product);
 });
 exports.default = mongoose_1.default.model("Review", ReviewSchema);

@@ -4,6 +4,7 @@ import { UserSchemaInterface } from "../models/User";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, UnauthenticatedError } from "../errors";
 import { attachCookiesToRes, createTokenUser } from "../helpers";
+import crypto from "crypto";
 
 const register: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body as {
@@ -22,8 +23,8 @@ const register: RequestHandler = async (req, res) => {
   const role = isFirstAccount ? "admin" : "user";
 
   const user = await User.create({ ...req.body, role });
-  const tokenUser = createTokenUser(user);
 
+  const tokenUser = createTokenUser(user);
   attachCookiesToRes(res, tokenUser);
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
@@ -47,7 +48,7 @@ const login: RequestHandler = async (req, res) => {
   }
 
   const tokenUser = createTokenUser(user);
-  
+
   attachCookiesToRes(res, tokenUser);
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };

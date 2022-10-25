@@ -7,7 +7,12 @@ export interface UserSchemaInterface {
   email: string;
   password: string;
   role: string;
-  comparePassword?: (password: string) => Promise<boolean>
+  verificationToken: string;
+  isVerified: boolean;
+  verified: Date;
+  passwordToken: string;
+  passwordTokenExpirationDate: Date;
+  comparePassword?: (password: string) => Promise<boolean>;
 }
 
 const UserSchema = new mongoose.Schema<UserSchemaInterface>({
@@ -36,7 +41,7 @@ const UserSchema = new mongoose.Schema<UserSchemaInterface>({
     type: String,
     enum: ["admin", "user"],
     default: "user",
-  },
+  }
 });
 
 UserSchema.pre("save", async function () {
@@ -46,8 +51,8 @@ UserSchema.pre("save", async function () {
 });
 
 UserSchema.methods.comparePassword = async function (passwordInput: string) {
-   const result = await bcrypt.compare(passwordInput, this.password)
-   return result
-}
+  const result = await bcrypt.compare(passwordInput, this.password);
+  return result;
+};
 
 export default mongoose.model<UserSchemaInterface>("User", UserSchema);

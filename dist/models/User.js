@@ -32,7 +32,7 @@ const UserSchema = new mongoose_1.default.Schema({
         type: String,
         enum: ["admin", "user"],
         default: "user",
-    },
+    }
 });
 UserSchema.pre("save", async function () {
     if (!this.isModified("password"))

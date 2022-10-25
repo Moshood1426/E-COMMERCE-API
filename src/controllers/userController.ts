@@ -1,6 +1,10 @@
 import { RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { BadRequestError, NotFoundError, UnauthenticatedError } from "../errors";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthenticatedError,
+} from "../errors";
 import User from "../models/User";
 import { AuthUserRequest } from "../middleware/auth";
 import { attachCookiesToRes, createTokenUser } from "../helpers";

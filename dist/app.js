@@ -16,6 +16,7 @@ const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const productRoute_1 = __importDefault(require("./routes/productRoute"));
 const reviewRoute_1 = __importDefault(require("./routes/reviewRoute"));
+const orderRoute_1 = __importDefault(require("./routes/orderRoute"));
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 if (process.env.NODE_ENV !== "production") {
@@ -28,6 +29,7 @@ app.use("/api/v1/auth", authRoute_1.default);
 app.use("/api/v1/user", userRoute_1.default);
 app.use("/api/v1/product", productRoute_1.default);
 app.use("/api/v1/review", reviewRoute_1.default);
+app.use("/api/v1/orders", orderRoute_1.default);
 app.get("/", (req, res) => {
     res.status(200).json({ msg: "connected" });
 });
