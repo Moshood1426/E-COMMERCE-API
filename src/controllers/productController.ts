@@ -5,6 +5,7 @@ import Product from "../models/Product";
 import { BadRequestError, NotFoundError } from "../errors";
 import path from "path";
 
+//create order
 const createProduct: RequestHandler = async (req: AuthUserRequest, res) => {
   req.body.user = req.user?.userId;
   const product = await Product.create({ ...req.body });
@@ -13,12 +14,14 @@ const createProduct: RequestHandler = async (req: AuthUserRequest, res) => {
     .json({ msg: "create product success", product });
 };
 
+//get all products
 const getAllProducts: RequestHandler = async (req, res) => {
   const products = await Product.find({});
 
   res.status(StatusCodes.OK).json({ products, count: products.length });
 };
 
+//get single product
 const getSingleProduct: RequestHandler<{ productId: string }> = async (
   req,
   res
@@ -33,6 +36,7 @@ const getSingleProduct: RequestHandler<{ productId: string }> = async (
   res.status(StatusCodes.OK).json({ product });
 };
 
+//update product
 const updateProduct: RequestHandler<{ productId: string }> = async (
   req,
   res
@@ -51,6 +55,7 @@ const updateProduct: RequestHandler<{ productId: string }> = async (
   res.status(StatusCodes.OK).json({ product });
 };
 
+//delete product
 const deleteProduct: RequestHandler = async (req, res) => {
   const { productId } = req.params;
 
@@ -63,6 +68,7 @@ const deleteProduct: RequestHandler = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Product succesfully deleted" });
 };
 
+//upload image
 const uploadImage: RequestHandler = async (req, res) => {
   if (!req.files) {
     throw new BadRequestError("No file was uploaded");

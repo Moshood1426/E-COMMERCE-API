@@ -1,11 +1,10 @@
 import { RequestHandler } from "express";
 import User from "../models/User";
-import { UserSchemaInterface } from "../models/User";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, UnauthenticatedError } from "../errors";
 import { attachCookiesToRes, createTokenUser } from "../helpers";
-import crypto from "crypto";
 
+//register
 const register: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body as {
     name: string;
@@ -53,6 +52,7 @@ const login: RequestHandler = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
+//logout 
 const logout: RequestHandler = (req, res) => {
   res.cookie("token", "logout", {
     httpOnly: true,

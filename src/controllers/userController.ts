@@ -9,12 +9,14 @@ import User from "../models/User";
 import { AuthUserRequest } from "../middleware/auth";
 import { attachCookiesToRes, createTokenUser } from "../helpers";
 
+//get all users
 const getAllUsers: RequestHandler = async (req, res) => {
   const users = await User.find({ role: "user" }).select("-password");
 
   res.status(StatusCodes.OK).json({ users });
 };
 
+//get single user
 const getSingleUser = async (req: AuthUserRequest, res: Response) => {
   const { userId } = req.params;
 
@@ -25,11 +27,13 @@ const getSingleUser = async (req: AuthUserRequest, res: Response) => {
   res.status(StatusCodes.OK).json({ user });
 };
 
+//show current users
 const showCurrentUser: RequestHandler = (req: AuthUserRequest, res) => {
   //fetches user for an urgent request like refreshing
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 
+//update user
 const updateUser: RequestHandler = async (req: AuthUserRequest, res) => {
   const { email, name } = req.body;
   if (!email || !name) {
@@ -50,6 +54,7 @@ const updateUser: RequestHandler = async (req: AuthUserRequest, res) => {
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
+//update user password
 const updateUserPassword: RequestHandler = async (
   req: AuthUserRequest,
   res

@@ -6,6 +6,7 @@ import { BadRequestError, NotFoundError } from "../errors";
 import Order from "../models/Order";
 import { checkPermissions, fakeStripeAPI } from "../helpers";
 
+//createOrder
 const createOrder: RequestHandler = async (req: AuthUserRequest, res) => {
   const {
     items: cartItems,
@@ -78,11 +79,13 @@ const createOrder: RequestHandler = async (req: AuthUserRequest, res) => {
     .json({ order, clientSecret: order.clientSecret });
 };
 
+//get all orders
 const getAllOrders: RequestHandler = async (req, res) => {
   const orders = await Order.find({});
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
 
+//get single order
 const getSingleOrder: RequestHandler = async (req: AuthUserRequest, res) => {
   const { id: orderId } = req.params;
   const order = await Order.findOne({ _id: orderId });
@@ -93,6 +96,7 @@ const getSingleOrder: RequestHandler = async (req: AuthUserRequest, res) => {
   res.status(StatusCodes.OK).json({ order });
 };
 
+//get current user orders
 const getCurrentUserOrders: RequestHandler = async (
   req: AuthUserRequest,
   res
@@ -101,6 +105,7 @@ const getCurrentUserOrders: RequestHandler = async (
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
 
+//update order
 const updateOrder: RequestHandler = async (req: AuthUserRequest, res) => {
   const { id: orderId } = req.params;
   const { paymentIntentId } = req.body as { paymentIntentId: string };

@@ -14,7 +14,7 @@ import authRoute from "./routes/authRoute";
 import userRoute from "./routes/userRoute";
 import productRoute from "./routes/productRoute";
 import reviewRoute from "./routes/reviewRoute";
-import orderRoute from "./routes/orderRoute"
+import orderRoute from "./routes/orderRoute";
 
 const app = express();
 dotenv.config();
@@ -29,8 +29,8 @@ app.use(fileUpload());
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
-app.use("/api/v1/review", reviewRoute)
-app.use("/api/v1/orders", orderRoute)
+app.use("/api/v1/review", reviewRoute);
+app.use("/api/v1/orders", orderRoute);
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.status(200).json({ msg: "connected" });

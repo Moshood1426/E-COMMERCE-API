@@ -6,4 +6,4 @@ const fakeStripeAPI = async (amount: number, currency: string) => {
   return { client_secret, amount };
 };
 
-export default fakeStripeAPI
+export default fakeStripeAPI;

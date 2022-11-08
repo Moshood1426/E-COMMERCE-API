@@ -6,6 +6,7 @@ import { BadRequestError, NotFoundError } from "../errors";
 import Review from "../models/Review";
 import { checkPermissions } from "../helpers";
 
+//create review
 const createReview: RequestHandler = async (req: AuthUserRequest, res) => {
   const { productId } = req.body as { productId: object };
   const isValidProduct = await Product.findOne({ _id: productId });
@@ -26,6 +27,7 @@ const createReview: RequestHandler = async (req: AuthUserRequest, res) => {
   res.status(StatusCodes.OK).json({ review });
 };
 
+//get all reviews
 const getAllReviews: RequestHandler = async (req, res) => {
   const reviews = await Review.find({}).populate({
     path: "product",
@@ -35,6 +37,7 @@ const getAllReviews: RequestHandler = async (req, res) => {
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
 
+//get single review
 const getSingleReview: RequestHandler<{ id: object }> = async (req, res) => {
   const { id: reviewId } = req.params;
   const review = await Review.findOne({ _id: reviewId });
@@ -44,6 +47,7 @@ const getSingleReview: RequestHandler<{ id: object }> = async (req, res) => {
   res.status(StatusCodes.OK).json({ review });
 };
 
+//update review
 const updateReview: RequestHandler<{ id: string }> = async (
   req: AuthUserRequest,
   res

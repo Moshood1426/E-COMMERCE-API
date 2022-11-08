@@ -1,12 +1,13 @@
 import jwt from "jsonwebtoken";
 import { Response } from "express";
 import createJWT from "./createJWT";
-import { TokenUserArg } from "./createTokenUser";
 
+//verify jwt
 const verifyJWT = ({ token }: { token: string }) => {
   return jwt.verify(token, process.env.JWT_SECRET!);
 };
 
+//attach cookies to response
 const attachCookiesToRes = (
   res: Response,
   user: { name: string; userId: object; role: string }
