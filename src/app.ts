@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
 
 import connectDB from "./db/connect";
 import morgan from "morgan";
@@ -26,15 +27,13 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(fileUpload());
 
+app.use(express.static(path.join(__dirname, "./public")));
+
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/orders", orderRoute);
-
-app.get("/", (req: express.Request, res: express.Response) => {
-  res.status(200).json({ msg: "connected" });
-});
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

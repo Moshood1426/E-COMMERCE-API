@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = __importDefault(require("path"));
 const connect_1 = __importDefault(require("./db/connect"));
 const morgan_1 = __importDefault(require("morgan"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
@@ -25,14 +26,12 @@ if (process.env.NODE_ENV !== "production") {
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)(process.env.JWT_SECRET));
 app.use((0, express_fileupload_1.default)());
+app.use(express_1.default.static(path_1.default.join(__dirname, "./public")));
 app.use("/api/v1/auth", authRoute_1.default);
 app.use("/api/v1/user", userRoute_1.default);
 app.use("/api/v1/product", productRoute_1.default);
 app.use("/api/v1/review", reviewRoute_1.default);
 app.use("/api/v1/orders", orderRoute_1.default);
-app.get("/", (req, res) => {
-    res.status(200).json({ msg: "connected" });
-});
 app.use(notFound_1.default);
 app.use(errorHandler_1.default);
 const port = process.env.PORT || 5000;

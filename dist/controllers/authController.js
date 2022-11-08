@@ -8,6 +8,7 @@ const User_1 = __importDefault(require("../models/User"));
 const http_status_codes_1 = require("http-status-codes");
 const errors_1 = require("../errors");
 const helpers_1 = require("../helpers");
+//register
 const register = async (req, res) => {
     const { name, email, password } = req.body;
     const userExist = await User_1.default.findOne({ email: email });
@@ -42,6 +43,7 @@ const login = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ user: tokenUser });
 };
 exports.login = login;
+//logout 
 const logout = (req, res) => {
     res.cookie("token", "logout", {
         httpOnly: true,

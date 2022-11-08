@@ -8,11 +8,13 @@ const http_status_codes_1 = require("http-status-codes");
 const errors_1 = require("../errors");
 const User_1 = __importDefault(require("../models/User"));
 const helpers_1 = require("../helpers");
+//get all users
 const getAllUsers = async (req, res) => {
     const users = await User_1.default.find({ role: "user" }).select("-password");
     res.status(http_status_codes_1.StatusCodes.OK).json({ users });
 };
 exports.getAllUsers = getAllUsers;
+//get single user
 const getSingleUser = async (req, res) => {
     const { userId } = req.params;
     const user = await User_1.default.find({ _id: userId }).select("-password");
@@ -22,11 +24,13 @@ const getSingleUser = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ user });
 };
 exports.getSingleUser = getSingleUser;
+//show current users
 const showCurrentUser = (req, res) => {
     //fetches user for an urgent request like refreshing
     res.status(http_status_codes_1.StatusCodes.OK).json({ user: req.user });
 };
 exports.showCurrentUser = showCurrentUser;
+//update user
 const updateUser = async (req, res) => {
     var _a;
     const { email, name } = req.body;
@@ -45,6 +49,7 @@ const updateUser = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ user: tokenUser });
 };
 exports.updateUser = updateUser;
+//update user password
 const updateUserPassword = async (req, res) => {
     var _a;
     const { oldPassword, newPassword } = req.body;

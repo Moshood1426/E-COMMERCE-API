@@ -9,6 +9,7 @@ const Product_1 = __importDefault(require("../models/Product"));
 const errors_1 = require("../errors");
 const Review_1 = __importDefault(require("../models/Review"));
 const helpers_1 = require("../helpers");
+//create review
 const createReview = async (req, res) => {
     var _a, _b;
     const { productId } = req.body;
@@ -28,6 +29,7 @@ const createReview = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ review });
 };
 exports.createReview = createReview;
+//get all reviews
 const getAllReviews = async (req, res) => {
     const reviews = await Review_1.default.find({}).populate({
         path: "product",
@@ -36,6 +38,7 @@ const getAllReviews = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ reviews, count: reviews.length });
 };
 exports.getAllReviews = getAllReviews;
+//get single review
 const getSingleReview = async (req, res) => {
     const { id: reviewId } = req.params;
     const review = await Review_1.default.findOne({ _id: reviewId });
@@ -45,6 +48,7 @@ const getSingleReview = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ review });
 };
 exports.getSingleReview = getSingleReview;
+//update review
 const updateReview = async (req, res) => {
     const { id } = req.params;
     const { rating, title, comment } = req.body;

@@ -9,6 +9,7 @@ const Product_1 = __importDefault(require("../models/Product"));
 const errors_1 = require("../errors");
 const Order_1 = __importDefault(require("../models/Order"));
 const helpers_1 = require("../helpers");
+//createOrder
 const createOrder = async (req, res) => {
     const { items: cartItems, tax, shippingFee, } = req.body;
     if (!cartItems || cartItems.length < 1) {
@@ -54,11 +55,13 @@ const createOrder = async (req, res) => {
         .json({ order, clientSecret: order.clientSecret });
 };
 exports.createOrder = createOrder;
+//get all orders
 const getAllOrders = async (req, res) => {
     const orders = await Order_1.default.find({});
     res.status(http_status_codes_1.StatusCodes.OK).json({ orders, count: orders.length });
 };
 exports.getAllOrders = getAllOrders;
+//get single order
 const getSingleOrder = async (req, res) => {
     const { id: orderId } = req.params;
     const order = await Order_1.default.findOne({ _id: orderId });
@@ -69,11 +72,13 @@ const getSingleOrder = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json({ order });
 };
 exports.getSingleOrder = getSingleOrder;
+//get current user orders
 const getCurrentUserOrders = async (req, res) => {
     const orders = await Order_1.default.find({ user: req.user.userId });
     res.status(http_status_codes_1.StatusCodes.OK).json({ orders, count: orders.length });
 };
 exports.getCurrentUserOrders = getCurrentUserOrders;
+//update order
 const updateOrder = async (req, res) => {
     const { id: orderId } = req.params;
     const { paymentIntentId } = req.body;

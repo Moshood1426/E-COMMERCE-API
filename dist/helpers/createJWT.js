@@ -8,7 +8,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const createJWT = (payload) => {
     const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_LIFETIME
+        expiresIn: process.env.JWT_LIFETIME,
     });
     return token;
 };
