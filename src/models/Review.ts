@@ -64,6 +64,7 @@ ReviewSchema.post('save', async function () {
 })
 
 ReviewSchema.post('remove', async function () {
+  //@ts-ignore
   await (this.constructor as any).calculateAverageRating(this.product);
 })
 

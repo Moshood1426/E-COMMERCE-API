@@ -18,6 +18,7 @@ const UserSchema = new mongoose.Schema<UserSchemaInterface>({
     minlength: [3, "Name cannot be less than 3 characters"],
     maxlength: [20, "Name cannot be more than 3 characters"],
   },
+  //@ts-ignore
   email: {
     type: String,
     required: [true, "Kindly input user email"],
@@ -42,6 +43,7 @@ const UserSchema = new mongoose.Schema<UserSchemaInterface>({
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(10);
+    //@ts-ignore
   this.password = await bcrypt.hash(this.password, salt);
 });
 

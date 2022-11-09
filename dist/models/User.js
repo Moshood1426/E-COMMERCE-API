@@ -14,6 +14,7 @@ const UserSchema = new mongoose_1.default.Schema({
         minlength: [3, "Name cannot be less than 3 characters"],
         maxlength: [20, "Name cannot be more than 3 characters"],
     },
+    //@ts-ignore
     email: {
         type: String,
         required: [true, "Kindly input user email"],
@@ -38,6 +39,7 @@ UserSchema.pre("save", async function () {
     if (!this.isModified("password"))
         return;
     const salt = await bcryptjs_1.default.genSalt(10);
+    //@ts-ignore
     this.password = await bcryptjs_1.default.hash(this.password, salt);
 });
 UserSchema.methods.comparePassword = async function (passwordInput) {

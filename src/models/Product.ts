@@ -82,6 +82,7 @@ ProductSchema.virtual('reviews', {
 })
 
 ProductSchema.pre("remove", async function () {
+  //@ts-ignore
   await Review.deleteMany({ product: this._id });
 });
 
