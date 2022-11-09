@@ -40,7 +40,7 @@ ReviewSchema.statics.calculateAverageRatings = async function (productId) {
         {
             $group: {
                 _id: null,
-                averageRating: { $avg: '$rating' },
+                averageRating: { $avg: "$rating" },
                 numOfReviews: { $sum: 1 },
             },
         },
@@ -55,12 +55,11 @@ ReviewSchema.statics.calculateAverageRatings = async function (productId) {
         console.log(error);
     }
 };
-ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
-ReviewSchema.post('save', async function () {
+ReviewSchema.post("save", async function () {
     //@ts-ignore
     await this.constructor.calculateAverageRating(this.product);
 });
-ReviewSchema.post('remove', async function () {
+ReviewSchema.post("remove", async function () {
     //@ts-ignore
     await this.constructor.calculateAverageRating(this.product);
 });

@@ -22,7 +22,7 @@ const createReview = async (req, res) => {
         user: (_a = req.user) === null || _a === void 0 ? void 0 : _a.userId,
     });
     if (userSubmitted) {
-        throw new errors_1.BadRequestError("User has submitted a review");
+        throw new errors_1.BadRequestError("User has already submitted a review");
     }
     req.body.user = (_b = req.user) === null || _b === void 0 ? void 0 : _b.userId;
     const review = await Review_1.default.create({ ...req.body, product: productId });

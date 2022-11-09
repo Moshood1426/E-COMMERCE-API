@@ -42,7 +42,7 @@ const updateProduct = async (req, res) => {
         runValidators: true,
     });
     if (!product) {
-        throw new errors_1.NotFoundError(`User with id:${productId} not registered`);
+        throw new errors_1.NotFoundError(`Product cannot be found`);
     }
     res.status(http_status_codes_1.StatusCodes.OK).json({ product });
 };
