@@ -49,7 +49,7 @@ const updateProduct: RequestHandler<{ productId: string }> = async (
   });
 
   if (!product) {
-    throw new NotFoundError(`User with id:${productId} not registered`);
+    throw new NotFoundError(`Product cannot be found`);
   }
 
   res.status(StatusCodes.OK).json({ product });

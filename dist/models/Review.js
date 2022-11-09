@@ -55,7 +55,9 @@ ReviewSchema.statics.calculateAverageRatings = async function (productId) {
         console.log(error);
     }
 };
+ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
 ReviewSchema.post('save', async function () {
+    //@ts-ignore
     await this.constructor.calculateAverageRating(this.product);
 });
 ReviewSchema.post('remove', async function () {

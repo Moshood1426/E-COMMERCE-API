@@ -19,7 +19,7 @@ const createReview: RequestHandler = async (req: AuthUserRequest, res) => {
     user: req.user?.userId,
   });
   if (userSubmitted) {
-    throw new BadRequestError("User has submitted a review");
+    throw new BadRequestError("User has already submitted a review");
   }
 
   req.body.user = req.user?.userId;

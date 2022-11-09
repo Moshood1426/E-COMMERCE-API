@@ -7,6 +7,13 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 
+//@ts-ignore
+import xss from "xss-clean"; //@ts-ignore
+import cors from "cors";
+import helmet from "helmet";
+import rateLimiter from "express-rate-limit";
+import mongoSanitize from "express-mongo-sanitize";
+
 import "express-async-errors";
 import notFoundMiddleware from "./middleware/notFound";
 import errorHandlerMiddleware from "./middleware/errorHandler";
@@ -19,6 +26,18 @@ import orderRoute from "./routes/orderRoute";
 
 const app = express();
 dotenv.config();
+
+app.set("trust proxy", 1);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 60,
+  })
+);
+app.use(helmet())
+app.use(cors())
+app.use(xss())
+app.use(mongoSanitize())
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));

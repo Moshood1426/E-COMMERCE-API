@@ -10,6 +10,12 @@ const connect_1 = __importDefault(require("./db/connect"));
 const morgan_1 = __importDefault(require("morgan"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
+//@ts-ignore
+const xss_clean_1 = __importDefault(require("xss-clean")); //@ts-ignore
+const cors_1 = __importDefault(require("cors"));
+const helmet_1 = __importDefault(require("helmet"));
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 require("express-async-errors");
 const notFound_1 = __importDefault(require("./middleware/notFound"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
@@ -20,6 +26,15 @@ const reviewRoute_1 = __importDefault(require("./routes/reviewRoute"));
 const orderRoute_1 = __importDefault(require("./routes/orderRoute"));
 const app = (0, express_1.default)();
 dotenv_1.default.config();
+app.set("trust proxy", 1);
+app.use((0, express_rate_limit_1.default)({
+    windowMs: 15 * 60 * 1000,
+    max: 60,
+}));
+app.use((0, helmet_1.default)());
+app.use((0, cors_1.default)());
+app.use((0, xss_clean_1.default)());
+app.use((0, express_mongo_sanitize_1.default)());
 if (process.env.NODE_ENV !== "production") {
     app.use((0, morgan_1.default)("dev"));
 }
