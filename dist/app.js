@@ -13,7 +13,6 @@ const express_fileupload_1 = __importDefault(require("express-fileupload"));
 //@ts-ignore
 const xss_clean_1 = __importDefault(require("xss-clean")); //@ts-ignore
 const cors_1 = __importDefault(require("cors"));
-const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 require("express-async-errors");
@@ -24,6 +23,7 @@ const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const productRoute_1 = __importDefault(require("./routes/productRoute"));
 const reviewRoute_1 = __importDefault(require("./routes/reviewRoute"));
 const orderRoute_1 = __importDefault(require("./routes/orderRoute"));
+const http_status_codes_1 = require("http-status-codes");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 app.set("trust proxy", 1);
@@ -31,7 +31,7 @@ app.use((0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
     max: 60,
 }));
-app.use((0, helmet_1.default)());
+// app.use(helmet())
 app.use((0, cors_1.default)());
 app.use((0, xss_clean_1.default)());
 app.use((0, express_mongo_sanitize_1.default)());
@@ -47,6 +47,9 @@ app.use("/api/v1/user", userRoute_1.default);
 app.use("/api/v1/product", productRoute_1.default);
 app.use("/api/v1/review", reviewRoute_1.default);
 app.use("/api/v1/orders", orderRoute_1.default);
+app.get("/api/v1", (req, res) => {
+    res.status(http_status_codes_1.StatusCodes.OK).json({ msg: "Conection successful" });
+});
 app.use(notFound_1.default);
 app.use(errorHandler_1.default);
 const port = process.env.PORT || 5000;
