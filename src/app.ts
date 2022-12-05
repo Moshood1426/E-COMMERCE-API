@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
+import { Request, Response } from "express";
 
 import connectDB from "./db/connect";
 import morgan from "morgan";
@@ -23,6 +24,7 @@ import userRoute from "./routes/userRoute";
 import productRoute from "./routes/productRoute";
 import reviewRoute from "./routes/reviewRoute";
 import orderRoute from "./routes/orderRoute";
+import { StatusCodes } from "http-status-codes";
 
 const app = express();
 dotenv.config();
@@ -34,10 +36,10 @@ app.use(
     max: 60,
   })
 );
-app.use(helmet())
-app.use(cors())
-app.use(xss())
-app.use(mongoSanitize())
+// app.use(helmet())
+app.use(cors());
+app.use(xss());
+app.use(mongoSanitize());
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -53,6 +55,10 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/orders", orderRoute);
+
+app.get("/api/v1", (req: Request, res: Response) => {
+  res.status(StatusCodes.OK).json({ msg: "Conection successful" });
+});
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
